@@ -1,40 +1,386 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Painel CNES — Profissionais, equipes e estabelecimentos</title>
-<style>
-:root{--ink:#17324d;--muted:#64748b;--line:#dbe5ee;--soft:#f5f8fb;--blue:#0b6eaa;--blue2:#e8f3fa;--green:#147a55;--orange:#b45309;--shadow:0 10px 28px #17324d12}*{box-sizing:border-box}body{margin:0;background:#f4f7fa;color:var(--ink);font:14px system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}header{background:linear-gradient(120deg,#0d476c,#0a7892);color:#fff;padding:28px max(20px,calc((100% - 1180px)/2));box-shadow:var(--shadow)}header h1{margin:0 0 6px;font-size:25px}header p{margin:0;color:#d9eff6}.wrap{max-width:1180px;margin:22px auto;padding:0 20px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px;margin-bottom:18px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.status{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;background:#eaf7f1;color:var(--green);font-weight:700}.status.warn{background:#fff7e8;color:var(--orange)}button,.button{border:0;border-radius:9px;background:var(--blue);color:#fff;padding:10px 14px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px}button.secondary,.button.secondary{background:#edf3f7;color:var(--ink)}button:disabled{opacity:.55;cursor:not-allowed}.small{font-size:12px;color:var(--muted)}.update-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:12px;align-items:end}.field label{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:6px}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;background:#fff;color:var(--ink)}.notice{background:var(--blue2);border-left:4px solid var(--blue);padding:12px 14px;border-radius:8px;line-height:1.5}.notice a{color:var(--blue);font-weight:700}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.kpi{padding:15px;border:1px solid var(--line);border-radius:11px;background:var(--soft)}.kpi b{display:block;font-size:24px;margin-top:4px}.kpi span{color:var(--muted);font-size:12px}.filters{display:grid;grid-template-columns:2fr repeat(3,1fr) auto;gap:10px;align-items:end}.content{display:grid;grid-template-columns:1fr 2fr;gap:18px}.bar-row{display:grid;grid-template-columns:145px 1fr 35px;gap:8px;align-items:center;margin:10px 0}.bar-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}.bar-track{height:9px;background:#e7eef4;border-radius:99px;overflow:hidden}.bar-fill{height:100%;background:linear-gradient(90deg,#0b6eaa,#18a2a9);border-radius:99px}.bar-num{text-align:right;font-weight:700;font-size:12px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;min-width:760px}th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:middle}th{background:#f5f8fb;color:var(--muted);font-size:12px;position:sticky;top:0}tr:last-child td{border-bottom:0}.tag{color:var(--blue);font-size:11px}.ma-input{width:100px;padding:7px;border:1px solid var(--line);border-radius:7px}.empty{text-align:center;color:var(--muted);padding:22px}.actions{display:flex;gap:9px;flex-wrap:wrap}.modal-backdrop{position:fixed;inset:0;background:#08253866;display:none;align-items:center;justify-content:center;padding:20px}.modal{background:#fff;border-radius:14px;max-width:650px;width:100%;padding:22px;box-shadow:0 20px 60px #0004}.modal h2{margin-top:0}.modal ul{padding-left:20px;line-height:1.6}footer{color:var(--muted);font-size:12px;padding:8px 0 28px}code{background:#edf3f7;padding:2px 4px;border-radius:4px}@media(max-width:850px){.update-grid,.content{grid-template-columns:1fr}.filters{grid-template-columns:1fr 1fr}.filters .wide{grid-column:1/-1}.kpis{grid-template-columns:repeat(2,1fr)}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Descontos Legais (2026)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400,500,600,700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
 </head>
-<body>
-<header><h1>Painel CNES</h1><p>Profissionais, equipes e estabelecimentos — atualização por competência da base nacional</p></header>
-<main class="wrap">
-<section class="card"><div class="topbar"><div><strong>Fonte oficial da atualização</strong><div id="updateInfo" class="small">Nenhuma base importada nesta sessão.</div></div><div id="statusBadge" class="status warn">● Aguardando base</div></div><div class="update-grid" style="margin-top:16px"><div class="field"><label for="competency">Competência nacional disponível</label><select id="competency"><option value="202609">09/2026 — BASE_DE_DADOS_CNES_202609.ZIP</option><option value="202608">08/2026 — BASE_DE_DADOS_CNES_202608.ZIP</option><option value="202607">07/2026 — BASE_DE_DADOS_CNES_202607.ZIP</option><option value="202606">06/2026 — BASE_DE_DADOS_CNES_202606.ZIP</option></select></div><div class="actions"><a id="downloadLink" class="button" target="_blank" rel="noopener">Abrir download oficial</a><button id="helpBtn" class="secondary">Como atualizar</button></div><div class="actions"><label class="button secondary" for="fileInput">Importar arquivo local</label><input id="fileInput" type="file" accept=".csv,.txt,.tsv,.json,.zip" hidden></div></div><div class="notice" style="margin-top:14px">O portal CNES publica a base nacional por competência em arquivo ZIP. Baixe o arquivo oficial, depois importe-o aqui. O navegador não envia dados para terceiros; a leitura e o armazenamento da base acontecem localmente neste dispositivo.</div></section>
-<section class="kpis"><div class="kpi"><span>Profissionais/registros</span><b id="kpiProfessionals">0</b></div><div class="kpi"><span>Equipes</span><b id="kpiTeams">0</b></div><div class="kpi"><span>Estabelecimentos</span><b id="kpiUnits">0</b></div><div class="kpi"><span>CNS distintos</span><b id="kpiCns">0</b></div><div class="kpi"><span>Microárea preenchida</span><b id="kpiFilled">0</b></div></section>
-<section class="card"><div class="filters"><div class="field wide"><label for="search">Buscar profissional, CNS, CNES ou estabelecimento</label><input id="search" placeholder="Digite para pesquisar..."></div><div class="field"><label for="unit">Estabelecimento</label><select id="unit"><option value="">Todos</option></select></div><div class="field"><label for="team">Equipe</label><select id="team"><option value="">Todas</option></select></div><div class="field"><label for="activity">Atividade/CBO</label><select id="activity"><option value="">Todas</option></select></div><button id="clearBtn" class="secondary">Limpar</button></div></section>
-<section class="content"><div class="card"><h3>Registros por estabelecimento</h3><div id="unitBars"><div class="empty">Importe uma base para visualizar.</div></div></div><div class="card"><div class="topbar"><h3 style="margin:0">Dados sincronizados</h3><span id="rowCount" class="small">0 registros</span></div><div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Profissional</th><th>Estabelecimento</th><th>Equipe</th><th>Atividade/CBO</th><th>CNS</th><th>Microárea local</th></tr></thead><tbody id="tbody"><tr><td colspan="6" class="empty">Importe a base nacional ou o seu arquivo de dados para começar.</td></tr></tbody></table></div></div></section>
-<footer>Fontes: <a href="https://cnes.datasus.gov.br/pages/downloads/arquivosBaseDados.jsp" target="_blank" rel="noopener">Base de dados CNES</a> · <a href="https://cnes.datasus.gov.br/pages/downloads/arquivosAplicacao.jsp" target="_blank" rel="noopener">Arquivos de aplicação</a> · <a href="https://cnes.datasus.gov.br/pages/downloads/documentacao.jsp" target="_blank" rel="noopener">Documentação e dicionário de dados</a>. A Microárea é um campo local e não é sobrescrita pela atualização nacional.</footer>
-</main>
-<div id="modalBackdrop" class="modal-backdrop"><div class="modal"><h2>Como atualizar os dados</h2><ol><li>Clique em <strong>Abrir download oficial</strong> e baixe a competência desejada no portal do CNES.</li><li>Volte a esta página e use <strong>Importar arquivo local</strong>. São aceitos CSV, TSV, TXT, JSON e ZIP contendo esses formatos.</li><li>O sistema reconhece nomes de colunas comuns do CNES. Registros antigos são substituídos pela nova competência, enquanto as Microáreas são preservadas pelo identificador CNS/CNES/profissional.</li></ol><p class="small">Arquivos TXT de layout posicional sem cabeçalho precisam ser convertidos conforme o Caderno Layout oficial antes da importação.</p><button id="closeModal">Fechar</button></div></div>
-<script>
-const $=id=>document.getElementById(id);const SOURCE='https://cnes.datasus.gov.br/EstatisticasServlet?path=BASE_DE_DADOS_CNES_';
-const state={rows:[],filtered:[],competency:'202609'};
-const aliases={professional:['Profissional (CNES)','PROFISSIONAL','NOME_PROFISSIONAL','NOME PROFISSIONAL','NOME'],cns:['CNS','CO_CNS','CO_CNS_PROF','CNS PROFISSIONAL'],unit:['Unidade','ESTABELECIMENTO','NO_FANTASIA','NOME_FANTASIA','NOME DO ESTABELECIMENTO','CNES'],cnes:['CNES','CO_CNES','CNES ESTABELECIMENTO'],team:['Equipe','EQUIPE','NO_EQUIPE','NOME_EQUIPE','NOME DE REFERÊNCIA','INE'],activity:['Atividade','ATIVIDADE','CBO','DS_CBO','CBO 2002'],micro:['Microárea','MICROAREA','MICROÁREA','MICRO_AREA']};
-function norm(v){return String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]/g,'')}
-function pick(obj,names){const keys=Object.keys(obj);const wanted=names.map(norm);const key=keys.find(k=>wanted.includes(norm(k)));return key?String(obj[key]??'').trim():''}
-function normalize(raw){return raw.map((x)=>{const r={_key:'', 'Profissional (CNES)':pick(x,aliases.professional),CNS:pick(x,aliases.cns),Unidade:pick(x,aliases.unit),CNES:pick(x,aliases.cnes),Equipe:pick(x,aliases.team),Atividade:pick(x,aliases.activity),CBO:pick(x,['CBO','DS_CBO','CBO 2002']),Microárea:pick(x,aliases.micro)};r._key=[r.CNS,r.CNES,r['Profissional (CNES)']].join('|').toUpperCase();return r}).filter(r=>r['Profissional (CNES)']||r.CNS||r.CNES||r.Unidade)}
-function uniq(key){return [...new Set(state.rows.map(r=>r[key]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'))}
-function fill(id,values,all){const e=$(id);e.innerHTML='<option value="">'+all+'</option>';values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;e.appendChild(o)})}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function apply(){const q=$('search').value.toLowerCase().trim(),u=$('unit').value,t=$('team').value,a=$('activity').value;state.filtered=state.rows.filter(r=>(!q||[r['Profissional (CNES)'],r.CNS,r.CNES,r.Unidade].join(' ').toLowerCase().includes(q))&&(!u||r.Unidade===u)&&(!t||r.Equipe===t)&&(!a||(r.Atividade===a||r.CBO===a)));render()}
-function render(){const rows=state.filtered;const units=new Set(rows.map(r=>r.Unidade).filter(Boolean));$('kpiProfessionals').textContent=rows.length.toLocaleString('pt-BR');$('kpiTeams').textContent=new Set(rows.map(r=>r.Equipe).filter(Boolean)).size.toLocaleString('pt-BR');$('kpiUnits').textContent=units.size.toLocaleString('pt-BR');$('kpiCns').textContent=new Set(rows.map(r=>r.CNS).filter(Boolean)).size.toLocaleString('pt-BR');$('kpiFilled').textContent=rows.filter(r=>r.Microárea).length.toLocaleString('pt-BR');$('rowCount').textContent=`${rows.length.toLocaleString('pt-BR')} registro${rows.length===1?'':'s'} encontrado${rows.length===1?'':'s'}`;const counts={};rows.forEach(r=>{counts[r.Unidade||'Sem estabelecimento']=(counts[r.Unidade||'Sem estabelecimento']||0)+1});const max=Math.max(1,...Object.values(counts));$('unitBars').innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,20).map(([k,v])=>`<div class="bar-row"><div class="bar-label" title="${esc(k)}">${esc(k)}</div><div class="bar-track"><div class="bar-fill" style="width:${v/max*100}%"></div></div><div class="bar-num">${v}</div></div>`).join('')||'<div class="empty">Nenhum registro para os filtros selecionados.</div>';$('tbody').innerHTML=rows.slice(0,1000).map(r=>`<tr><td><strong>${esc(r['Profissional (CNES)']||'—')}</strong><br><span class="tag">${esc(r.CBO||'')}</span></td><td>${esc(r.Unidade||r.CNES||'—')}</td><td>${esc(r.Equipe||'—')}</td><td>${esc(r.Atividade||r.CBO||'—')}</td><td>${esc(r.CNS||'—')}</td><td><input class="ma-input" value="${esc(r.Microárea)}" placeholder="—" data-key="${esc(r._key)}" aria-label="Microárea"></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Nenhum registro encontrado.</td></tr>';document.querySelectorAll('.ma-input').forEach(i=>i.addEventListener('change',e=>{const r=state.rows.find(x=>x._key===e.target.dataset.key);if(r){r.Microárea=e.target.value.trim();saveLocal();apply()}}))}
-function saveLocal(){localStorage.setItem('cnes.microareas',JSON.stringify(Object.fromEntries(state.rows.map(r=>[r._key,r.Microárea]).filter(([k,v])=>k&&v))))}
-function preserveMicroareas(rows){const saved=JSON.parse(localStorage.getItem('cnes.microareas')||'{}');const old=Object.fromEntries(state.rows.map(r=>[r._key,r.Microárea]).filter(([k,v])=>k&&v));return rows.map(r=>({...r,Microárea:r.Microárea||saved[r._key]||old[r._key]||''}))}
-function parseDelimited(text){const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>x.trim());if(!lines.length)return[];const sample=lines.slice(0,5).join('\n'),del=(sample.match(/;/g)||[]).length> (sample.match(/,/g)||[]).length?';':(sample.match(/\t/g)||[]).length?'\t':',';function row(line){const out=[];let cur='',quote=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'&&(line[i+1]==='"')){cur+='"';i++}else if(c==='"')quote=!quote;else if(c===del&&!quote){out.push(cur.trim());cur=''}else cur+=c}out.push(cur.trim());return out}const head=row(lines[0]);return lines.slice(1).map(l=>{const vals=row(l),o={};head.forEach((h,i)=>o[h]=vals[i]??'');return o})}
-async function importFile(file){$('statusBadge').textContent='● Processando arquivo';$('statusBadge').className='status warn';try{let entries=[];if(file.name.toLowerCase().endsWith('.zip')){if(!window.JSZip)throw new Error('Biblioteca ZIP ainda não carregada. Tente novamente.');const z=await JSZip.loadAsync(await file.arrayBuffer());for(const name of Object.keys(z.files)){if(z.files[name].dir||!/[.](csv|txt|tsv|json)$/i.test(name))continue;const text=await z.files[name].async('text');entries.push(name.toLowerCase().endsWith('.json')?JSON.parse(text):parseDelimited(text))}}else{const text=await file.text();entries=[file.name.toLowerCase().endsWith('.json')?JSON.parse(text):parseDelimited(text)]}let raw=entries.flatMap(x=>Array.isArray(x)?x:(x.data||x.rows||[]));const rows=preserveMicroareas(normalize(raw));if(!rows.length)throw new Error('Nenhum registro reconhecido. Verifique o cabeçalho ou use um CSV exportado do CNES.');state.rows=rows;state.competency=$('competency').value;fill('unit',uniq('Unidade'),'Todos');fill('team',uniq('Equipe'),'Todas');fill('activity',[...new Set([...uniq('Atividade'),...uniq('CBO')])],'Todas');$('statusBadge').textContent='● CNES carregado';$('statusBadge').className='status';$('updateInfo').textContent=`${rows.length.toLocaleString('pt-BR')} registros importados de ${file.name} · competência selecionada ${state.competency.slice(0,4)}/${state.competency.slice(4)}`;apply()}catch(e){$('statusBadge').textContent='⚠️ Falha na importação';$('statusBadge').className='status warn';alert(e.message)}}
-$('competency').addEventListener('change',()=>{state.competency=$('competency').value;updateLink()});function updateLink(){$('downloadLink').href=SOURCE+$('competency').value+'.ZIP'}$('fileInput').addEventListener('change',e=>{if(e.target.files[0])importFile(e.target.files[0]);e.target.value=''});['search','unit','team','activity'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',apply));$('clearBtn').addEventListener('click',()=>{['search','unit','team','activity'].forEach(id=>$(id).value='');apply()});$('helpBtn').onclick=()=>{$('modalBackdrop').style.display='flex'};$('closeModal').onclick=()=>{$('modalBackdrop').style.display='none'};$('modalBackdrop').onclick=e=>{if(e.target.id==='modalBackdrop')e.currentTarget.style.display='none'};updateLink();
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-</body></html>
+<body class="bg-slate-950 text-slate-100 min-h-screen py-10 px-4">
+
+    <div class="max-w-4xl mx-auto bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 overflow-hidden">
+        
+        <!-- Cabeçalho Moderno -->
+        <div class="bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-900 py-8 px-8 border-b border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <div class="flex items-center gap-3">
+                    <span class="bg-indigo-600 text-xs uppercase tracking-wider font-extrabold px-3 py-1 rounded-full text-white shadow-sm">Ano 2026</span>
+                    <h1 class="text-2xl font-extrabold tracking-tight text-white">SIMULADOR DE SALÁRIO DO SERVIDOR</h1>
+                </div>
+                <p class="text-slate-400 text-sm mt-1">Simulador Profissional de Vencimentos, INSS, IRRF, Pensão e Descontos</p>
+            </div>
+            <div>
+                <button id="btnLimpar" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold rounded-xl transition border border-slate-700 shadow-sm flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Limpar Tudo
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Coluna de Entradas (Inputs) -->
+            <div class="space-y-6">
+                <div class="border-b border-slate-800 pb-2">
+                    <h2 class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Passo 1</h2>
+                    <h3 class="text-lg font-bold text-white">Composição de Vencimentos</h3>
+                </div>
+
+                <!-- Salário Base -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Salário Base (R$)</label>
+                    <input type="number" id="salarioBase" value="" placeholder="0,00" step="0.01" 
+                        class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-slate-900 focus:outline-none transition font-medium text-white">
+                </div>
+
+                <!-- Triênios -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Qtd. Triênios</label>
+                        <input type="number" id="qtdTrienios" value="0" min="0" step="1" 
+                            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-slate-900 focus:outline-none transition font-medium text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Valor (3% un.)</label>
+                        <input type="text" id="valTrienios" readonly 
+                            class="w-full px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-slate-400 font-semibold cursor-not-allowed" value="R$ 0,00">
+                    </div>
+                </div>
+
+                <!-- Insalubridade -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Adicional de Insalubridade</label>
+                    <select id="insalubridade" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-slate-900 focus:outline-none transition font-medium text-white">
+                        <option value="0" selected>Nenhuma (0%)</option>
+                        <option value="0.10">10% sobre o Base</option>
+                        <option value="0.20">20% sobre o Base</option>
+                        <option value="0.40">40% sobre o Base</option>
+                    </select>
+                </div>
+
+                <!-- Múltiplos Adicionais / Gratificações -->
+                <div class="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-semibold text-slate-300">Outros Adicionais / Gratificações</label>
+                        <button type="button" id="btnAddAdicional" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1 shadow-sm">
+                            + Adicionar
+                        </button>
+                    </div>
+                    <div id="containerAdicionais" class="space-y-2">
+                        <!-- Inserido dinamicamente -->
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-800 pb-2 pt-2">
+                    <h2 class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Passo 2</h2>
+                    <h3 class="text-lg font-bold text-white">Deduções e Descontos</h3>
+                </div>
+
+                <!-- Opção de Pensão -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Pensão Alimentícia (%)</label>
+                        <select id="pensaoPercentual" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-slate-900 focus:outline-none transition font-medium text-white">
+                            <option value="0" selected>Sem Pensão (0%)</option>
+                            <option value="10">10%</option>
+                            <option value="20">20%</option>
+                            <option value="30">30%</option>
+                            <option value="custom">Outro Valor (%)</option>
+                        </select>
+                    </div>
+                    <div id="divCustomPensao" style="display:none;">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Personalizado (%)</label>
+                        <input type="number" id="pensaoCustom" value="" placeholder="0" step="0.5" 
+                            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-slate-900 focus:outline-none transition font-medium text-white">
+                    </div>
+                </div>
+
+                <!-- Múltiplos Outros Descontos -->
+                <div class="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-semibold text-slate-300">Outros Descontos (Consignados, Faltas...)</label>
+                        <button type="button" id="btnAddDesconto" class="text-xs bg-rose-600 hover:bg-rose-500 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1 shadow-sm">
+                            + Adicionar
+                        </button>
+                    </div>
+                    <div id="containerDescontos" class="space-y-2">
+                        <!-- Inserido dinamicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna de Resultados (Demonstrativo Detalhado) -->
+            <div class="bg-slate-950/70 rounded-2xl p-6 border border-slate-800 flex flex-col justify-between shadow-inner">
+                <div>
+                    <h2 class="text-base font-bold text-white border-b pb-3 border-slate-800 mb-4 flex items-center justify-between">
+                        <span>Demonstrativo Detalhado</span>
+                        <span class="text-xs font-semibold text-indigo-400 bg-indigo-950/80 border border-indigo-800 px-3 py-1 rounded-full">Oficial 2026</span>
+                    </h2>
+
+                    <div class="space-y-2 text-sm">
+                        <!-- Proventos -->
+                        <div class="flex justify-between items-center py-1.5 border-b border-slate-800/60">
+                            <span class="text-slate-400">Salário Base:</span>
+                            <span id="resBase" class="font-semibold text-slate-200">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5 border-b border-slate-800/60">
+                            <span class="text-slate-400">Triênios:</span>
+                            <span id="resTrienios" class="font-semibold text-slate-200">+ R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5 border-b border-slate-800/60">
+                            <span class="text-slate-400">Insalubridade:</span>
+                            <span id="resInsalubridade" class="font-semibold text-slate-200">+ R$ 0,00</span>
+                        </div>
+                        
+                        <!-- Lista dinâmica de Adicionais -->
+                        <div id="resListaAdicionais" class="space-y-1"></div>
+
+                        <div class="flex justify-between items-center py-2 border-b-2 border-slate-700 bg-indigo-950/40 px-3 rounded-xl">
+                            <span class="font-bold text-white">Salário Bruto Total:</span>
+                            <span id="resBruto" class="font-bold text-indigo-400">R$ 0,00</span>
+                        </div>
+
+                        <!-- Descontos -->
+                        <div class="flex justify-between items-center py-1.5 border-b border-slate-800/60 pt-2">
+                            <span class="text-slate-400">Desconto INSS:</span>
+                            <span id="resInss" class="font-semibold text-rose-400">- R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5 border-b border-slate-800/60">
+                            <span class="text-slate-400">Base de Cálculo IRRF:</span>
+                            <span id="resBaseIrrf" class="font-semibold text-slate-300">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5 border-b border-slate-800/60">
+                            <span class="text-slate-400">Desconto IRRF:</span>
+                            <span id="resIrrf" class="font-semibold text-rose-400">- R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5 border-b border-slate-800/60">
+                            <span class="text-slate-400">Líquido após Impostos:</span>
+                            <span id="resLiquidoImpostos" class="font-semibold text-slate-200">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5 border-b border-slate-800/60">
+                            <span id="labelPensaoDesc" class="text-slate-400">Pensão Alimentícia (0%):</span>
+                            <span id="resPensao" class="font-semibold text-rose-400">- R$ 0,00</span>
+                        </div>
+
+                        <!-- Lista dinâmica de Descontos -->
+                        <div id="resListaDescontos" class="space-y-1"></div>
+                    </div>
+                </div>
+
+                <!-- Líquido Final em Destaque -->
+                <div class="mt-6 bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-5 rounded-2xl shadow-lg text-center border border-emerald-500/30">
+                    <span class="block text-xs uppercase tracking-wider text-emerald-100 font-bold">Salário Líquido Disponível</span>
+                    <span id="resLiquidoFinal" class="text-3xl font-extrabold tracking-tight mt-1 block text-white">R$ 0,00</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Rodapé Profissional com Nome do Criador -->
+        <div class="bg-slate-950 px-8 py-5 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400 gap-2">
+            <span>Holerite Fácil — Tabelas oficiais vigentes para o ano de 2026.</span>
+            <span class="font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800 px-3 py-1 rounded-full">Criado por: Alison dos Santos</span>
+        </div>
+
+    </div>
+
+    <script>
+        function formatarMoeda(valor) {
+            return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function calcularINSS(salarioBruto) {
+            const faixas = [
+                { limite: 1518.00, aliquota: 0.075 },
+                { limite: 2793.88, aliquota: 0.09 },
+                { limite: 4190.83, aliquota: 0.12 },
+                { limite: 8157.41, aliquota: 0.14 }
+            ];
+
+            let inss = 0;
+            let anterior = 0;
+
+            for (let i = 0; i < faixas.length; i++) {
+                if (salarioBruto > faixas[i].limite) {
+                    inss += (faixas[i].limite - anterior) * faixas[i].aliquota;
+                    anterior = faixas[i].limite;
+                } else {
+                    inss += (salarioBruto - anterior) * faixas[i].aliquota;
+                    break;
+                }
+            }
+
+            const tetoInss = 951.63; 
+            return Math.min(inss, tetoInss);
+        }
+
+        function calcularIRRF(baseCalculo) {
+            if (baseCalculo <= 2259.20) return 0;
+            
+            let imposto = 0;
+            if (baseCalculo <= 2826.65) {
+                imposto = (baseCalculo * 0.075) - 169.44;
+            } else if (baseCalculo <= 3751.05) {
+                imposto = (baseCalculo * 0.15) - 381.44;
+            } else if (baseCalculo <= 4664.68) {
+                imposto = (baseCalculo * 0.225) - 662.77;
+            } else {
+                imposto = (baseCalculo * 0.275) - 896.00;
+            }
+            
+            return Math.max(0, imposto);
+        }
+
+        function adicionarLinhaAdicional(nome = '', valor = '') {
+            const container = document.getElementById('containerAdicionais');
+            const div = document.createElement('div');
+            div.className = 'flex gap-2 items-center row-adicional';
+            div.innerHTML = `
+                <input type="text" placeholder="Nome do Adicional" value="${nome}" class="input-nome-adic w-7/12 px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <input type="number" placeholder="0,00" step="0.01" value="${valor}" class="input-val-adic w-4/12 px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <button type="button" class="btn-remover text-rose-400 hover:text-rose-300 font-bold px-2 py-1 text-sm">✕</button>
+            `;
+            div.querySelector('.btn-remover').addEventListener('click', () => { div.remove(); executarCalculo(); });
+            div.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', executarCalculo);
+            });
+            container.appendChild(div);
+        }
+
+        function adicionarLinhaDesconto(nome = '', valor = '') {
+            const container = document.getElementById('containerDescontos');
+            const div = document.createElement('div');
+            div.className = 'flex gap-2 items-center row-desconto';
+            div.innerHTML = `
+                <input type="text" placeholder="Nome do Desconto" value="${nome}" class="input-nome-desc w-7/12 px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-white focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                <input type="number" placeholder="0,00" step="0.01" value="${valor}" class="input-val-desc w-4/12 px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-white focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                <button type="button" class="btn-remover text-rose-400 hover:text-rose-300 font-bold px-2 py-1 text-sm">✕</button>
+            `;
+            div.querySelector('.btn-remover').addEventListener('click', () => { div.remove(); executarCalculo(); });
+            div.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', executarCalculo);
+            });
+            container.appendChild(div);
+        }
+
+        function executarCalculo() {
+            const salarioBase = parseFloat(document.getElementById('salarioBase').value) || 0;
+            const qtdTrienios = parseInt(document.getElementById('qtdTrienios').value) || 0;
+            const percInsalubridade = parseFloat(document.getElementById('insalubridade').value) || 0;
+
+            const valorTrienios = salarioBase * (0.03 * qtdTrienios);
+            document.getElementById('valTrienios').value = formatarMoeda(valorTrienios);
+
+            const valorInsalubridade = salarioBase * percInsalubridade;
+
+            let totalOutrosAdicionais = 0;
+            let htmlResAdicionais = '';
+            document.querySelectorAll('.row-adicional').forEach(row => {
+                const nome = row.querySelector('.input-nome-adic').value.trim() || 'Adicional';
+                const val = parseFloat(row.querySelector('.input-val-adic').value) || 0;
+                if (val > 0) {
+                    totalOutrosAdicionais += val;
+                    htmlResAdicionais += `
+                        <div class="flex justify-between items-center py-1.5 border-b border-slate-800/60">
+                            <span class="text-slate-400">${nome}:</span>
+                            <span class="font-semibold text-slate-200">+ ${formatarMoeda(val)}</span>
+                        </div>`;
+                }
+            });
+            document.getElementById('resListaAdicionais').innerHTML = htmlResAdicionais;
+
+            const salarioBruto = salarioBase + valorTrienios + valorInsalubridade + totalOutrosAdicionais;
+
+            const descontoInss = calcularINSS(salarioBruto);
+            const baseIrrf = salarioBruto - descontoInss;
+            const descontoIrrf = calcularIRRF(baseIrrf);
+            const liquidoImpostos = salarioBruto - descontoInss - descontoIrrf;
+
+            const selectPensao = document.getElementById('pensaoPercentual').value;
+            const divCustom = document.getElementById('divCustomPensao');
+            
+            let percPensao = 0;
+            if (selectPensao === 'custom') {
+                divCustom.style.display = 'block';
+                percPensao = parseFloat(document.getElementById('pensaoCustom').value) || 0;
+            } else {
+                divCustom.style.display = 'none';
+                percPensao = parseFloat(selectPensao) || 0;
+            }
+
+            document.getElementById('labelPensaoDesc').innerText = `Pensão Alimentícia (${percPensao}%):`;
+            const valorPensao = liquidoImpostos * (percPensao / 100);
+
+            let totalOutrosDescontos = 0;
+            let htmlResDescontos = '';
+            document.querySelectorAll('.row-desconto').forEach(row => {
+                const nome = row.querySelector('.input-nome-desc').value.trim() || 'Desconto';
+                const val = parseFloat(row.querySelector('.input-val-desc').value) || 0;
+                if (val > 0) {
+                    totalOutrosDescontos += val;
+                    htmlResDescontos += `
+                        <div class="flex justify-between items-center py-1.5 border-b border-slate-800/60">
+                            <span class="text-slate-400">${nome}:</span>
+                            <span class="font-semibold text-rose-400">- ${formatarMoeda(val)}</span>
+                        </div>`;
+                }
+            });
+            document.getElementById('resListaDescontos').innerHTML = htmlResDescontos;
+
+            const liquidoFinal = liquidoImpostos - valorPensao - totalOutrosDescontos;
+
+            document.getElementById('resBase').innerText = formatarMoeda(salarioBase);
+            document.getElementById('resTrienios').innerText = `+ ${formatarMoeda(valorTrienios)}`;
+            document.getElementById('resInsalubridade').innerText = `+ ${formatarMoeda(valorInsalubridade)}`;
+            document.getElementById('resBruto').innerText = formatarMoeda(salarioBruto);
+            
+            document.getElementById('resInss').innerText = `- ${formatarMoeda(descontoInss)}`;
+            document.getElementById('resBaseIrrf').innerText = formatarMoeda(baseIrrf);
+            document.getElementById('resIrrf').innerText = `- ${formatarMoeda(descontoIrrf)}`;
+            document.getElementById('resLiquidoImpostos').innerText = formatarMoeda(liquidoImpostos);
+            document.getElementById('resPensao').innerText = `- ${formatarMoeda(valorPensao)}`;
+            document.getElementById('resLiquidoFinal').innerText = formatarMoeda(liquidoFinal);
+        }
+
+        document.getElementById('btnAddAdicional').addEventListener('click', () => adicionarLinhaAdicional());
+        document.getElementById('btnAddDesconto').addEventListener('click', () => adicionarLinhaDesconto());
+
+        ['salarioBase', 'qtdTrienios', 'insalubridade', 'pensaoPercentual', 'pensaoCustom'].forEach(id => {
+            document.getElementById(id).addEventListener('input', executarCalculo);
+            document.getElementById(id).addEventListener('change', executarCalculo);
+        });
+
+        document.getElementById('btnLimpar').addEventListener('click', () => {
+            document.getElementById('salarioBase').value = '';
+            document.getElementById('qtdTrienios').value = '0';
+            document.getElementById('insalubridade').value = '0';
+            document.getElementById('pensaoPercentual').value = '0';
+            document.getElementById('divCustomPensao').style.display = 'none';
+            document.getElementById('pensaoCustom').value = '';
+            document.getElementById('containerAdicionais').innerHTML = '';
+            document.getElementById('containerDescontos').innerHTML = '';
+            executarCalculo();
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            executarCalculo();
+        });
+    </script>
+</body>
+</html>
